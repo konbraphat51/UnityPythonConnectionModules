@@ -11,6 +11,8 @@ class UnityConnector:
     """
     Connect your python script to Unity
     
+    Python listen (wait) for Unity to comming to connect.
+    
     :param int port_this: Port this (Python) allocated
     :param int port_unity: Port Unity allocated
     :param str ip: IP to connect to
