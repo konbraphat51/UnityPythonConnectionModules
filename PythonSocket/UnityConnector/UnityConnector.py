@@ -33,6 +33,7 @@ class UnityConnector:
         self.port_unity = port_unity
         self.timeout = timeout
         self.buffer_size = buffer_size
+        self.finish_code = finish_code 
         self.connecting = False
         self.socket = None
     
