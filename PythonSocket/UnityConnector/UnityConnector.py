@@ -41,6 +41,7 @@ class UnityConnector:
         Start listening to Unity
         
         :param bool overwriting: If True, overwrite the current connection if already connecting
+        :rtype: None
         """
         
         # if this is already connecting...
@@ -56,20 +57,28 @@ class UnityConnector:
         # start listening thread
         self.thread = threading.Thread(target=self._run_connection)
             
-    def stop_connection(self, error_when_not_connecting: bool = False):
+    def stop_connection(self) -> bool:
         """
         Close connection
         
         :param bool error_when_not_connecting: If True, raise error when not connecting
+        :return: True if connection is closed successfully, False if not connecting from the beginning
+        :rtype: bool
         """
         
+        # if not connecting...
         if not self.connecting:
-            raise Exception("Not connecting")
-        
-        self.socket.close()
+            #...show this wasn't connecting from the beginning
+            return False
         
         #stop connection
+        self.socket.close()
+        
+        #change flag
         self.connecting = False
+
+        # closed successfully
+        return True
             
     def _run_connection(self):
         """
