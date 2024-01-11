@@ -13,12 +13,14 @@ class UnityConnector:
     """
     
     def __init__(self, 
-                 port = 9000, 
-                 ip="127.0.0.1", 
-                 timeout = 3,
-                 buffer_size = 8192 # 8KB
+                 port_this:int = 9000,
+                 port_unity:int = 9001,
+                 ip:str="127.0.0.1", 
+                 timeout:float = 3,
+                 buffer_size:int = 8192 # 8KB
                  ):
-        self.address = (ip, port)
+        self.address_this = (ip, port_this)
+        self.address_unity = (ip, port_unity)
         self.timeout = timeout
         self.buffer_size = buffer_size
         
