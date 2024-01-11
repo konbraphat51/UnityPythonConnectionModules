@@ -53,6 +53,9 @@ class UnityConnector:
             else:
                 raise Exception("Already connecting")
             
+        # start listening thread
+        self.thread = threading.Thread(target=self._run_connection)
+            
     def stop_connection(self, error_when_not_connecting: bool = False):
         """
         Close connection
