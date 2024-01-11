@@ -4,7 +4,7 @@ Writer: Konbraphat51
 License: Boost Software License (BSL1.0)
 """
 
-from socket import socket, AF_INET, SOCK_STREAM
+from socket import socket, AF_INET, SOCK_STREAM, create_server
 import threading
 
 class UnityConnector:
@@ -28,32 +28,17 @@ class UnityConnector:
                  buffer_size:int = 8192 # 8KB
                  ):
         self.address_this = (ip, port_this)
-        self.address_unity = (ip, port_unity)
+        self.port_unity = port_unity
         self.timeout = timeout
         self.buffer_size = buffer_size
         self.connecting = False
         self.socket = None
     
-    def start_connection(self, first: bool = True, overwriting: bool = False):
+    def start_listening(self, overwriting: bool = False):
         """
-        Start connection to Unity
+        Start listening to Unity
         
-        :param bool|None first: If this (Python) started connection earlier than Unity, set this to True.
-            If True, this will wait for Unity connection,
-            if False, this will connect to Unity which is waiting
         :param bool overwriting: If True, overwrite the current connection if already connecting
-        """
-        
-        # if Unity is waiting for connection...
-        if not first:
-            # ...connect to Unity
-            self._create_connection(overwriting)
-        
-    def _create_connection(self, overwriting: bool = True) -> socket:
-        """
-        Connect to the waiting Unity
-        
-        :param bool overwriting: If True, overwrite the current connection
         """
         
         # if this is already connecting...
@@ -66,15 +51,21 @@ class UnityConnector:
             else:
                 raise Exception("Already connecting")
             
-        # connect to Unity
-        self.socket = socket(AF_INET, SOCK_STREAM)
-        self.socket.bind(self.address_this) # set the sender address (this)
-        self.socket.connect(self.address_unity) # destination address (Unity)
-    
-    def _start_server(self):
+    def _listen_connection(self):
+        
+    def _wait_connection_established(self):
         """
-        Start socket server
+        Wait until Unity connect to this
+        
+        Make a server and wait until Unity connect to this
         """
         
-        self.thread = threading.Thread(target=self._server_thread)
-        self.thread.start()
+        #make server
+        self.server = create_server(self.address_this)
+        
+        #wait connected with port_unity
+        #loop for the specified port detected (ignore others)
+        while True:
+            self.socket, self.address_unity = self.server.accept()
+            if self.address_unity[1] == self.port_unity:
+                break
