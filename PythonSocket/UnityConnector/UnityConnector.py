@@ -18,6 +18,7 @@ class UnityConnector:
     :param str ip: IP to connect to
     :param float timeout: Timeout for connection
     :param int buffer_size: Buffer size for receiving data
+    :param str finish_code: Code to finish connection
     """
     
     def __init__(self, 
@@ -25,7 +26,8 @@ class UnityConnector:
                  port_unity:int = 9001,
                  ip:str="127.0.0.1", 
                  timeout:float = 3,
-                 buffer_size:int = 8192 # 8KB
+                 buffer_size:int = 8192, # 8KB
+                 finish_code:str = "!end!"
                  ):
         self.address_this = (ip, port_this)
         self.port_unity = port_unity
@@ -34,7 +36,7 @@ class UnityConnector:
         self.connecting = False
         self.socket = None
     
-    def start_listening(self, overwriting: bool = False):
+    def start_listening(self, overwriting: bool = False) -> None:
         """
         Start listening to Unity
         
@@ -51,7 +53,45 @@ class UnityConnector:
             else:
                 raise Exception("Already connecting")
             
-    def _listen_connection(self):
+    def stop_connection(self, error_when_not_connecting: bool = False):
+        """
+        Close connection
+        
+        :param bool error_when_not_connecting: If True, raise error when not connecting
+        """
+        
+        if not self.connecting:
+            raise Exception("Not connecting")
+        
+        self.socket.close()
+        
+        #stop connection
+        self.connecting = False
+            
+    def _run_connection(self):
+        """
+        Run connection
+        
+        This function is called when the connection is established
+        """
+        # start connection
+        self.connecting = True
+        
+        #establish
+        self._wait_connection_established()
+        
+        # loop for receiving data
+        while True:
+            # receive data
+            data = self.socket.recv(self.buffer_size).decode()
+            
+            # if finish code received...
+            if data == self.finish_code:
+                # ...stop connection
+                self.stop_connection()
+            
+            # do something with data
+            self._report_received_data(data)
         
     def _wait_connection_established(self):
         """
