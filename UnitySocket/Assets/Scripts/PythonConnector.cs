@@ -211,6 +211,16 @@ public class PythonConnector : MonoBehaviour
                 int bytes = stream.Read(data, 0, data.Length);
                 string message = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
+                //handle stop code
+                if (message == finishString)
+                {
+                    //stop connection
+                    StopConnection();
+
+                    //stop listening
+                    break;
+                }
+
                 //call registered callback
                 OnDataReceived(message);
             }
