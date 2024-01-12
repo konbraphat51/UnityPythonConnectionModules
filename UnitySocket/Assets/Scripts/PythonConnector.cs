@@ -85,4 +85,31 @@ public class PythonConnector : MonoBehaviour
             return false;
         }
     }
+
+    /// <summary>
+    /// Keep listening to the Python server
+    ///
+    /// this will be running in a separate thread0
+    /// </summary>
+    private void OnProcessListening()
+    {
+        while (true)
+        {
+            //read data from Python server
+            byte[] data = new byte[bufferSize];
+            int bytes = stream.Read(data, 0, data.Length);
+            string message = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            //call registered callback
+            OnDataReceived(message);
+        }
+    }
+
+    /// <summary>
+    /// Called when received data from Python server.
+    ///
+    /// This will decode the data and call the registered callback
+    /// </summary>
+    /// <param name="data"></param>
+    private void OnDataReceived(string data) { }
 }
