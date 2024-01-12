@@ -72,6 +72,14 @@ class UnityConnector:
         # remember callback
         self.on_data_received = on_data_received
 
+        # establish connection
+        establish_succeeded = self._wait_connection_established()
+
+        # if connection failed...
+        if not establish_succeeded:
+            # ...quit
+            return
+
         # start listening thread
         self.thread = threading.Thread(target=self._run_connection)
 
@@ -174,14 +182,6 @@ class UnityConnector:
 
         This function is called when the connection is established
         """
-
-        # establish
-        establish_succeeded = self._wait_connection_established()
-
-        # if connection failed...
-        if not establish_succeeded:
-            # ...quit
-            return
 
         # loop for receiving data
         while True:
