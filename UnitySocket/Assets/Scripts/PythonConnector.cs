@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Connecting to Python
@@ -69,6 +70,14 @@ public class PythonConnector : MonoBehaviour
     [SerializeField]
     private float timeOutReceiving = 10f;
 
+    [Tooltip("Event called when received data from Python server")]
+    [SerializeField]
+    private UnityEvent onDataReceived = new UnityEvent();
+
+    [Tooltip("Event called when timeout")]
+    [SerializeField]
+    private UnityEvent onTimeOut = new UnityEvent();
+
     private TcpClient client;
     private NetworkStream stream;
 
@@ -100,6 +109,9 @@ public class PythonConnector : MonoBehaviour
         {
             //connection failed
             connecting = false;
+
+            onTimeOut.Invoke();
+
             return false;
         }
     }
@@ -149,7 +161,11 @@ public class PythonConnector : MonoBehaviour
         }
         catch (SocketException)
         {
+            //stop connection
             StopConnection();
+
+            //action when timeout
+            onTimeOut.Invoke();
         }
     }
 
