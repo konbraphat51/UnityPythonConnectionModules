@@ -140,6 +140,55 @@ public class PythonConnector : MonoBehaviour
     }
 
     /// <summary>
+    /// Send data to Python server by JSON
+    /// </summary>
+    /// <typeparam name="T">Serializable class</typeparam>
+    /// <param name="data">Serializable class instance. This will be converted to JSON</param>
+    /// <returns>if the data was sent successfully. False if not connecting from the beginning</returns>
+    public bool Send<T>(T data)
+    {
+        //if not connecting from the beginning...
+        if (!connecting)
+        {
+            //...show this wasn't sent successfully
+            return false;
+        }
+
+        //encode data
+        byte[] bytes = System.Text.Encoding.ASCII.GetBytes(data.ToString());
+
+        //send data
+        stream.Write(bytes, 0, bytes.Length);
+
+        //show this was sent successfully
+        return true;
+    }
+
+    /// <summary>
+    /// Send data to Python server by string
+    /// </summary>
+    /// <param name="data">string data</param>
+    /// <returns>if the data was sent successfully. False if not connecting from the beginning</returns>
+    public bool Send(string data)
+    {
+        //if not connecting from the beginning...
+        if (!connecting)
+        {
+            //...show this wasn't sent successfully
+            return false;
+        }
+
+        //encode data
+        byte[] bytes = System.Text.Encoding.ASCII.GetBytes(data);
+
+        //send data
+        stream.Write(bytes, 0, bytes.Length);
+
+        //show this was sent successfully
+        return true;
+    }
+
+    /// <summary>
     /// Keep listening to the Python server
     ///
     /// this will be running in a separate thread0
