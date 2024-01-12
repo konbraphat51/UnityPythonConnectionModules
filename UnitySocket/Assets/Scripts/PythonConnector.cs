@@ -73,10 +73,6 @@ namespace PythonConnection
         [SerializeField]
         private float timeOutReceiving = 10f;
 
-        [Tooltip("Event called when received data from Python server")]
-        [SerializeField]
-        private UnityEvent onDataReceived = new UnityEvent();
-
         [Tooltip("Event called when timeout")]
         [SerializeField]
         private UnityEvent onTimeOut = new UnityEvent();
