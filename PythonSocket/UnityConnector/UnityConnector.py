@@ -36,6 +36,20 @@ class UnityConnector:
         self.finish_code = finish_code 
         self.connecting = False
         self.socket = None
+        
+    class Encoder:
+        """
+        Encode data to send to Unity
+        """
+        def __init__(self) -> None:
+            pass
+        
+    class Decoder:
+        """
+        Decode data received from Unity
+        """
+        def __init__(self) -> None:
+            pass
     
     def start_listening(self, overwriting: bool = False) -> None:
         """
