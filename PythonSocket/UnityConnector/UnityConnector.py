@@ -88,6 +88,29 @@ class UnityConnector:
         # closed successfully
         return True
     
+    def send(self, data:dict) -> bool:
+        """
+        Send data to Unity
+        
+        :param dict data: Data to send
+        :return: True if data is sent successfully, False if not connecting
+        :rtype: bool
+        """
+        
+        # if not connecting...
+        if not self.connecting:
+            #...show this wasn't connecting from the beginning
+            return False
+        
+        #encode data
+        data_encoded = self.encode(data)
+        
+        #send data
+        self.socket.send(data_encoded.encode())
+        
+        # sent successfully
+        return True
+    
     def encode(self, data:dict) -> str:
         """
         Encode data to send to Unity
