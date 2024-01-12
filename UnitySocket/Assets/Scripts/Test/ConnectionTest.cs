@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using PythonConnection;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ConnectionTest : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public PythonConnector pythonConnector;
 
-    // Update is called once per frame
-    void Update()
+    void Start() { }
+
+    private void OnTimeout()
     {
-        
+        Debug.Log("Timeout");
     }
 }
