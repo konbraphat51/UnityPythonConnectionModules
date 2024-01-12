@@ -152,23 +152,10 @@ public class PythonConnector : MonoBehaviour
     /// <typeparam name="T">Serializable class</typeparam>
     /// <param name="data">Serializable class instance. This will be converted to JSON</param>
     /// <returns>if the data was sent successfully. False if not connecting from the beginning</returns>
-    public bool Send<T>(T data)
+    public virtual bool Send<T>(T data)
     {
-        //if not connecting from the beginning...
-        if (!connecting)
-        {
-            //...show this wasn't sent successfully
-            return false;
-        }
-
-        //encode data
-        byte[] bytes = System.Text.Encoding.ASCII.GetBytes(data.ToString());
-
-        //send data
-        stream.Write(bytes, 0, bytes.Length);
-
-        //show this was sent successfully
-        return true;
+        //to JSON string
+        return Send(Encode(data));
     }
 
     /// <summary>
@@ -176,7 +163,7 @@ public class PythonConnector : MonoBehaviour
     /// </summary>
     /// <param name="data">string data</param>
     /// <returns>if the data was sent successfully. False if not connecting from the beginning</returns>
-    public bool Send(string data)
+    public virtual bool Send(string data)
     {
         //if not connecting from the beginning...
         if (!connecting)
@@ -193,6 +180,25 @@ public class PythonConnector : MonoBehaviour
 
         //show this was sent successfully
         return true;
+    }
+
+    /// <summary>
+    /// Called when received data from Python server.
+    ///
+    /// This will decode the data and call the registered callback
+    /// </summary>
+    /// <param name="data"></param>
+    protected virtual void OnDataReceived(string data) { }
+
+    /// <summary>
+    /// Change data to JSON
+    /// </summary>
+    /// <typeparam name="T">Serializable class</typeparam>
+    /// <param name="data">Serializable class instance</param>
+    /// <returns>JSON string</returns>
+    protected virtual string Encode<T>(T data)
+    {
+        return JsonUtility.ToJson(data);
     }
 
     /// <summary>
@@ -234,12 +240,4 @@ public class PythonConnector : MonoBehaviour
             onTimeOut.Invoke();
         }
     }
-
-    /// <summary>
-    /// Called when received data from Python server.
-    ///
-    /// This will decode the data and call the registered callback
-    /// </summary>
-    /// <param name="data"></param>
-    private void OnDataReceived(string data) { }
 }
