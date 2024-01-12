@@ -36,7 +36,7 @@ class UnityConnector:
         timeout_establishing: float = 300,
         on_timeout: callable = lambda: None,
         buffer_size: int = 8192,  # 8KB
-        finish_code: str = "!end!",
+        finish_code: str = "end!",
     ) -> None:
         self.address_this = (ip, port_this)
         self.port_unity = port_unity
