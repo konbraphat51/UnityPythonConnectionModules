@@ -14,6 +14,8 @@ class UnityConnector:
     
     Python listen (wait) for Unity to comming to connect.
     
+    If structure/rule of data for communication is changed, you can override encode() and decode() function.
+    
     :param int port_this: Port this (Python) allocated
     :param int port_unity: Port Unity allocated
     :param str ip: IP to connect to
