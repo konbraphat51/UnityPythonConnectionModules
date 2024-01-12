@@ -15,9 +15,25 @@ using UnityEngine;
 /// </summary>
 public class PythonConnector : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start() { }
+    /// <summary>
+    /// Returns singleton instance
+    /// </summary>
+    public static PythonConnector instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<PythonConnector>();
 
-    // Update is called once per frame
-    void Update() { }
+                if (_instance == null)
+                {
+                    Debug.LogError("PythonConnector not found");
+                }
+            }
+            return _instance;
+        }
+    }
+
+    private static PythonConnector _instance;
 }
