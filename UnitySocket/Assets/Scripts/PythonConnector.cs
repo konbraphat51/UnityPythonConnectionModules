@@ -35,5 +35,8 @@ public class PythonConnector : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// For remember singleton instance
+    /// </summary>
     private static PythonConnector _instance;
 }
