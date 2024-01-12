@@ -216,6 +216,8 @@ public class PythonConnector : MonoBehaviour
         string[] splited = data.Split('!', 2);
         string dataType = splited[0];
         string dataJson = splited[1];
+
+        //to Decoder
     }
 
     /// <summary>
