@@ -6,6 +6,7 @@ License: Boost Software License (BSL1.0)
 
 from socket import create_server
 import threading
+import json
 
 class UnityConnector:
     """
@@ -80,6 +81,20 @@ class UnityConnector:
 
         # closed successfully
         return True
+    
+    def encode(self, data:dict) -> str:
+        """
+        Encode data to send to Unity
+        
+        The default encoding is to JSON.
+        If you want to change the encoding, override this function.
+        
+        :param dict data: Data to encode
+        :return: Encoded data
+        :rtype: str
+        """
+        
+        return json.dumps(data)
             
     def _run_connection(self):
         """
