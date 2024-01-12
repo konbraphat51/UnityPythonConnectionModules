@@ -88,6 +88,9 @@ class UnityConnector:
             # ...show this wasn't connecting from the beginning
             return False
 
+        # send stop code
+        self._send_str(self.finish_code)
+
         # stop connection
         self.socket.close()
 
