@@ -80,7 +80,7 @@ public class PythonConnector : MonoBehaviour
 
     [Tooltip("If get this string, will finish connection")]
     [SerializeField]
-    private string finishString = "!end!";
+    private string finishString = "end!";
 
     private TcpClient client;
     private NetworkStream stream;
