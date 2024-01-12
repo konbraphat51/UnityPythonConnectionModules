@@ -31,7 +31,7 @@ class UnityConnector:
                  timeout:float = 3,
                  buffer_size:int = 8192, # 8KB
                  finish_code:str = "!end!"
-                 ):
+                 ) -> None:
         self.address_this = (ip, port_this)
         self.port_unity = port_unity
         self.timeout = timeout
@@ -116,7 +116,7 @@ class UnityConnector:
         
         return json.loads(data)
             
-    def _run_connection(self):
+    def _run_connection(self) -> None:
         """
         Run connection
         
@@ -137,15 +137,18 @@ class UnityConnector:
             if data == self.finish_code:
                 # ...stop connection
                 self.stop_connection()
+                break
             
             # do something with data
             self._report_received_data(data)
         
-    def _wait_connection_established(self):
+    def _wait_connection_established(self) -> None:
         """
         Wait until Unity connect to this
         
         Make a server and wait until Unity connect to this
+        
+        :rtype: None
         """
         
         #make server
