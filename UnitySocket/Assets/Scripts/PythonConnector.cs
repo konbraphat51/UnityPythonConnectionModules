@@ -205,6 +205,20 @@ public class PythonConnector : MonoBehaviour
     }
 
     /// <summary>
+    /// Decode received data to Serializable class
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    protected virtual T Decode<T>(string data)
+    {
+        //devide to data_type and data JSON
+        string[] splited = data.Split('!', 2);
+        string dataType = splited[0];
+        string dataJson = splited[1];
+    }
+
+    /// <summary>
     /// Keep listening to the Python server
     ///
     /// this will be running in a separate thread0
