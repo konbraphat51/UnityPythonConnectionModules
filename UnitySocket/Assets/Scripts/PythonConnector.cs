@@ -88,6 +88,9 @@ public class PythonConnector : MonoBehaviour
             // to miliseconds
             client.ReceiveTimeout = (int)(timeOutReceiving * 1000f);
 
+            //start listening thread
+            Task.Factory.StartNew(OnProcessListening);
+
             //connection succeeded
             connecting = true;
             return true;
@@ -107,15 +110,23 @@ public class PythonConnector : MonoBehaviour
     /// </summary>
     private void OnProcessListening()
     {
-        while (true)
+        try
         {
-            //read data from Python server
-            byte[] data = new byte[bufferSize];
-            int bytes = stream.Read(data, 0, data.Length);
-            string message = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            while (true)
+            {
+                //read data from Python server
+                byte[] data = new byte[bufferSize];
+                int bytes = stream.Read(data, 0, data.Length);
+                string message = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
-            //call registered callback
-            OnDataReceived(message);
+                //call registered callback
+                OnDataReceived(message);
+            }
+        }
+        catch (SocketException)
+        {
+            //connection lost
+            connecting = false;
         }
     }
 
