@@ -38,6 +38,11 @@ public class PythonConnector : MonoBehaviour
     }
 
     /// <summary>
+    /// Returns true if currently connected to Python server
+    /// </summary>
+    public bool connecting { get; private set; }
+
+    /// <summary>
     /// For remember singleton instance
     /// </summary>
     private static PythonConnector _instance;
@@ -54,8 +59,30 @@ public class PythonConnector : MonoBehaviour
     [SerializeField]
     private int portThis = 9001;
 
+    private TcpClient client;
+    private NetworkStream stream;
+
+    /// <summary>
+    /// Connect to the Python server
+    /// </summary>
+    /// <returns>true if succeeded</returns>
     public bool StartConnection()
     {
-        return true;
+        try
+        {
+            //try connecting
+            client = new TcpClient(ipAddress, portPython);
+            stream = client.GetStream();
+
+            //connection succeeded
+            connecting = true;
+            return true;
+        }
+        catch (SocketException)
+        {
+            //connection failed
+            connecting = false;
+            return false;
+        }
     }
 }
