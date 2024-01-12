@@ -18,6 +18,7 @@ using UnityEngine.Events;
 /// This will be a client socket to connect to Python server
 /// Singleton
 /// </summary>
+[RequireComponent(typeof(DataDecoder))]
 public class PythonConnector : MonoBehaviour
 {
     /// <summary>
@@ -191,7 +192,15 @@ public class PythonConnector : MonoBehaviour
     /// This will decode the data and call the registered callback
     /// </summary>
     /// <param name="data"></param>
-    protected virtual void OnDataReceived(string data) { }
+    protected virtual void OnDataReceived(string data)
+    {
+        //separate data_type and data JSON
+        Separate(data, out string dataType, out string dataJson);
+
+        //to Decoder
+        GetComponent<DataDecoder>()
+            .DecodeAndReport(dataType, dataJson);
+    }
 
     /// <summary>
     /// Change data to JSON
@@ -207,17 +216,12 @@ public class PythonConnector : MonoBehaviour
     /// <summary>
     /// Decode received data to Serializable class
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="data"></param>
-    /// <returns></returns>
-    protected virtual T Decode<T>(string data)
+    protected virtual void Separate(string data, out string dataType, out string dataJson)
     {
         //devide to data_type and data JSON
         string[] splited = data.Split('!', 2);
-        string dataType = splited[0];
-        string dataJson = splited[1];
-
-        //to Decoder
+        dataType = splited[0];
+        dataJson = splited[1];
     }
 
     /// <summary>

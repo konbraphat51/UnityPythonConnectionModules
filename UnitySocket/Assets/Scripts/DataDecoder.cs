@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-abstract class DataDecoder : ScriptableObject
+abstract class DataDecoder : MonoBehaviour
 {
     /// <summary>
     /// Dictionary of data type name to actual C# class type reference
