@@ -153,7 +153,12 @@ class UnityConnector:
         """
         
         #establish
-        self._wait_connection_established()
+        establish_succeeded = self._wait_connection_established()
+        
+        # if connection failed...
+        if not establish_succeeded:
+            # ...quit
+            return
         
         # loop for receiving data
         while True:
@@ -184,13 +189,14 @@ class UnityConnector:
                 self.stop_connection()
                 break
         
-    def _wait_connection_established(self) -> None:
+    def _wait_connection_established(self) -> bool:
         """
         Wait until Unity connect to this
         
         Make a server and wait until Unity connect to this
         
-        :rtype: None
+        :return: True if connection is established successfully, False if timeout
+        :rtype: bool
         """
         
         #make server
@@ -199,25 +205,38 @@ class UnityConnector:
         #set timeout for establishing
         self.server.settimeout(self.timeout_establishing)
         
-        #wait connected with port_unity
-        #loop for the specified port detected (ignore others)
-        while True:
-            socket, address = self.server.accept()
-            # if port_unity detected...
-            if address[1] == self.port_unity:
-                # ...start connection
-                self.connecting = True
+        
+        try:
+            #wait connected with port_unity
+            #loop for the specified port detected (ignore others)
+            while True:
+                socket, address = self.server.accept()
+                # if port_unity detected...
+                if address[1] == self.port_unity:
+                    # ...start connection
+                    self.connecting = True
+                    
+                    # remember socket
+                    self.socket = socket
+                    self.address_unity = address
+                    
+                    # connection established successfully
+                    return True
                 
-                # remember socket
-                self.socket = socket
-                self.address_unity = address
-                
-                break
+                # if dirrerent port detected...
+                else:
+                    # ...not dealing with this
+                    socket.close()
+                    
+        # if timeout...
+        except socket.timeout:
+            # ...quit connection
             
-            # if dirrerent port detected...
-            else:
-                # ...not dealing with this
-                socket.close()
+            # call timeout callback
+            self.on_timeout()
+            
+            # connection failed
+            return False
             
     def _report_received_data(self, data:str) -> None:
         """
