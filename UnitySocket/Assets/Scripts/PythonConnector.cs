@@ -8,6 +8,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Connecting to Python
+///
+/// Singleton
+/// </summary>
 public class PythonConnector : MonoBehaviour
 {
     // Start is called before the first frame update
