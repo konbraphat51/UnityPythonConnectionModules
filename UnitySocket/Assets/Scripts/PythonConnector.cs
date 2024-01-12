@@ -1,3 +1,9 @@
+/*
+https://github.com/konbraphat51/UnityPythonConnectionClass
+Author: Konbraphat51
+License: Boost Software License (BSL1.0)
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
