@@ -73,6 +73,7 @@ public class PythonConnector : MonoBehaviour
             //try connecting
             client = new TcpClient(ipAddress, portThis);
             client.Connect(ipAddress, portPython);
+            stream = client.GetStream();
 
             //connection succeeded
             connecting = true;
