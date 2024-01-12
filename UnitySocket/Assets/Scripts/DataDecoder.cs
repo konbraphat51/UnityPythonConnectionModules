@@ -31,6 +31,18 @@ abstract class DataDecoder : ScriptableObject
         PrepareEvents(dataToType.Values.ToArray());
     }
 
+    public void DecodeAndReport(string dataTypeName, string dataJson)
+    {
+        //get data type
+        Type dataType = DataToType()[dataTypeName];
+
+        //convert json to data class
+        DataClass data = JsonUtility.FromJson(dataJson, dataType) as DataClass;
+
+        //report data
+        correspondingEvents[dataType].Invoke(data);
+    }
+
     /// <summary>
     /// Register new callback when data received
     /// </summary>
