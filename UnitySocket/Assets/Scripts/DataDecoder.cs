@@ -31,6 +31,26 @@ abstract class DataDecoder : ScriptableObject
         PrepareEvents(dataToType.Values.ToArray());
     }
 
+    /// <summary>
+    /// Register new callback when data received
+    /// </summary>
+    /// <param name="dataType">type of the data class</param>
+    /// <param name="callback">callback when data received</param>
+    public void RegisterAction(Type dataType, UnityAction<DataClass> callback)
+    {
+        correspondingEvents[dataType].AddListener(callback);
+    }
+
+    /// <summary>
+    /// Unregister callback when data received
+    /// </summary>
+    /// <param name="dataType">type of the data class</param>
+    /// <param name="callback">callback when data received</param>
+    public void RemoveAction(Type dataType, UnityAction<DataClass> callback)
+    {
+        correspondingEvents[dataType].RemoveListener(callback);
+    }
+
     private void PrepareEvents(Type[] types)
     {
         //prepare events
