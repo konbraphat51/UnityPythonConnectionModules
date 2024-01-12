@@ -79,7 +79,6 @@ class UnityConnector:
         """
         Close connection
 
-        :param bool error_when_not_connecting: If True, raise error when not connecting
         :return: True if connection is closed successfully, False if not connecting from the beginning
         :rtype: bool
         """
