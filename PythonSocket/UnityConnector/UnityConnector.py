@@ -40,10 +40,11 @@ class UnityConnector:
         self.connecting = False
         self.socket = None
     
-    def start_listening(self, overwriting: bool = False) -> None:
+    def start_listening(self, on_data_received: callable, overwriting: bool = False) -> None:
         """
         Start listening to Unity
         
+        :param callable on_data_received: Function to call when data is received
         :param bool overwriting: If True, overwrite the current connection if already connecting
         :rtype: None
         """
@@ -58,6 +59,9 @@ class UnityConnector:
             else:
                 raise Exception("Already connecting")
             
+        # remember callback for receiving data
+        self.on_data_received = on_data_received    
+        
         # start listening thread
         self.thread = threading.Thread(target=self._run_connection)
             
@@ -153,3 +157,17 @@ class UnityConnector:
             self.socket, self.address_unity = self.server.accept()
             if self.address_unity[1] == self.port_unity:
                 break
+            
+    def _report_received_data(self, data:str) -> None:
+        """
+        Report received data
+        
+        :param str data: Data received
+        :rtype: None
+        """
+        
+        #decode data
+        data = self.decode(data)
+        
+        #report
+        self.on_data_received(data)
