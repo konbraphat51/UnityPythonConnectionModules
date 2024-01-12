@@ -50,13 +50,14 @@ class UnityConnector:
 
     def start_listening(
         self, on_data_received: callable, overwriting: bool = False
-    ) -> None:
+    ) -> bool:
         """
         Start listening to Unity
 
         :param callable on_data_received: Function to call when data is received
         :param bool overwriting: If True, overwrite the current connection if already connecting
-        :rtype: None
+        :return: True if connection is established successfully, False if timeout
+        :rtype: bool
         """
 
         # if this is already connecting...
@@ -77,11 +78,14 @@ class UnityConnector:
 
         # if connection failed...
         if not establish_succeeded:
-            # ...quit
-            return
+            # ...failed
+            return False
 
         # start listening thread
         self.thread = threading.Thread(target=self._run_connection)
+        
+        # success
+        return True
 
     def stop_connection(self) -> bool:
         """
