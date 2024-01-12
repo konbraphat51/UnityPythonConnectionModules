@@ -55,6 +55,7 @@ class UnityConnector:
         Start listening to Unity
 
         :param callable on_data_received: Function to call when data is received
+            Param data_type(string), data(dict) will be passed to this function
         :param bool overwriting: If True, overwrite the current connection if already connecting
         :return: True if connection is established successfully, False if timeout
         :rtype: bool
