@@ -4,6 +4,7 @@ Author: Konbraphat51
 License: Boost Software License (BSL1.0)
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -104,6 +105,29 @@ public class PythonConnector : MonoBehaviour
     }
 
     /// <summary>
+    /// Close connection
+    /// </summary>
+    /// <returns>true if the connection closed successfully. False if not connecting from the beginning</returns>
+    public bool StopConnection()
+    {
+        // if not connecting from the beginning...
+        if (!connecting)
+        {
+            //...show this wasn't closed successfully
+            return false;
+        }
+
+        //close connection
+        stream.Close();
+        client.Close();
+
+        connecting = false;
+
+        //show this was closed successfully
+        return true;
+    }
+
+    /// <summary>
     /// Keep listening to the Python server
     ///
     /// this will be running in a separate thread0
@@ -125,8 +149,7 @@ public class PythonConnector : MonoBehaviour
         }
         catch (SocketException)
         {
-            //connection lost
-            connecting = false;
+            StopConnection();
         }
     }
 
