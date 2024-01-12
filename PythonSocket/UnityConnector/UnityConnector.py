@@ -277,7 +277,7 @@ class UnityConnector:
         """
 
         # decode data
-        data = self.decode(data)
+        data_type, data = self.decode(data)
 
         # report
-        self.on_data_received(data)
+        self.on_data_received(data_type, data)
