@@ -146,19 +146,23 @@ class UnityConnector:
         
         return f"{data_type}!{data_json}"
 
-    def decode(self, data: str) -> dict:
+    def decode(self, data: str) -> tuple[str, dict]:
         """
         Decode data received from Unity
 
-        The default decoding is to JSON.
+        The default decoding is to data_type + JSON.
         If you want to change the decoding, override this function.
 
         :param str data: Data to decode
-        :return: Decoded data
-        :rtype: dict
+        :return: (data_type, data)
+        :rtype: tuple[str, dict]
         """
+        
+        data_type, json_raw = data.split("!", 1)
+        
+        json_data = json.loads(json_raw)
 
-        return json.loads(data)
+        return (data_type, json_data)
     
     def _send_str(self, data_str: str) -> bool:
         """
