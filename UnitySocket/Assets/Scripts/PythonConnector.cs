@@ -7,6 +7,7 @@ License: Boost Software License (BSL1.0)
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -59,6 +60,14 @@ public class PythonConnector : MonoBehaviour
     [SerializeField]
     private int portThis = 9001;
 
+    [Tooltip("Buffer size for reading data from Python server. Bytes.")]
+    [SerializeField]
+    private int bufferSize = 8192;
+
+    [Tooltip("Timeout for receiving data from Python server. Seconds.")]
+    [SerializeField]
+    private float timeOutReceiving = 10f;
+
     private TcpClient client;
     private NetworkStream stream;
 
@@ -74,6 +83,10 @@ public class PythonConnector : MonoBehaviour
             client = new TcpClient(ipAddress, portThis);
             client.Connect(ipAddress, portPython);
             stream = client.GetStream();
+
+            //set timeout
+            // to miliseconds
+            client.ReceiveTimeout = (int)(timeOutReceiving * 1000f);
 
             //connection succeeded
             connecting = true;
