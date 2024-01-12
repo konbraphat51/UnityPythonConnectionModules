@@ -151,8 +151,6 @@ class UnityConnector:
         
         This function is called when the connection is established
         """
-        # start connection
-        self.connecting = True
         
         #establish
         self._wait_connection_established()
@@ -204,9 +202,22 @@ class UnityConnector:
         #wait connected with port_unity
         #loop for the specified port detected (ignore others)
         while True:
-            self.socket, self.address_unity = self.server.accept()
-            if self.address_unity[1] == self.port_unity:
+            socket, address = self.server.accept()
+            # if port_unity detected...
+            if address[1] == self.port_unity:
+                # ...start connection
+                self.connecting = True
+                
+                # remember socket
+                self.socket = socket
+                self.address_unity = address
+                
                 break
+            
+            # if dirrerent port detected...
+            else:
+                # ...not dealing with this
+                socket.close()
             
     def _report_received_data(self, data:str) -> None:
         """
