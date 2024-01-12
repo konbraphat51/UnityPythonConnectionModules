@@ -4,7 +4,7 @@ Writer: Konbraphat51
 License: Boost Software License (BSL1.0)
 """
 
-from socket import create_server
+from socket import create_server, socket
 import threading
 import json
 
@@ -19,22 +19,28 @@ class UnityConnector:
     :param int port_this: Port this (Python) allocated
     :param int port_unity: Port Unity allocated
     :param str ip: IP to connect to
-    :param float timeout: Timeout for connection
+    :param float timeout_receiving: How many seconds to wait for receive next data from Unity
+    :param float timeout_establishing: How many seconds to wait for establish connection with Unity
+    :param callable on_timeout: Function to call when timeout
     :param int buffer_size: Buffer size for receiving data
     :param str finish_code: Code to finish connection
     """
     
-    def __init__(self, 
+    def __init__(self,
                  port_this:int = 9000,
                  port_unity:int = 9001,
-                 ip:str="127.0.0.1", 
-                 timeout:float = 3,
+                 ip:str="127.0.0.1",
+                 timeout_receiving:float = 120,
+                 timeout_establishing:float = 300,
+                 on_timeout:callable = lambda: None, 
                  buffer_size:int = 8192, # 8KB
                  finish_code:str = "!end!"
                  ) -> None:
         self.address_this = (ip, port_this)
         self.port_unity = port_unity
-        self.timeout = timeout
+        self.timeout_receiving = timeout_receiving
+        self.timeout_establishing = timeout_establishing
+        self.on_timeout = on_timeout
         self.buffer_size = buffer_size
         self.finish_code = finish_code 
         self.connecting = False
@@ -59,8 +65,8 @@ class UnityConnector:
             else:
                 raise Exception("Already connecting")
             
-        # remember callback for receiving data
-        self.on_data_received = on_data_received    
+        # remember callback
+        self.on_data_received = on_data_received   
         
         # start listening thread
         self.thread = threading.Thread(target=self._run_connection)
@@ -153,17 +159,32 @@ class UnityConnector:
         
         # loop for receiving data
         while True:
-            # receive data
-            data = self.socket.recv(self.buffer_size).decode()
-            
-            # if finish code received...
-            if data == self.finish_code:
+            try:
+                # set timeout for receiving
+                self.socket.settimeout(self.timeout_receiving)
+                
+                # receive data
+                data = self.socket.recv(self.buffer_size).decode()
+                
+                # if finish code received...
+                if data == self.finish_code:
+                    # ...stop connection
+                    self.stop_connection()
+                    break
+                
+                # do something with data
+                self._report_received_data(data)
+                
+            # if timeout...
+            except socket.timeout:
+                # ...quit connection
+                
+                # call timeout callback
+                self.on_timeout()
+                
                 # ...stop connection
                 self.stop_connection()
                 break
-            
-            # do something with data
-            self._report_received_data(data)
         
     def _wait_connection_established(self) -> None:
         """
@@ -176,6 +197,9 @@ class UnityConnector:
         
         #make server
         self.server = create_server(self.address_this)
+        
+        #set timeout for establishing
+        self.server.settimeout(self.timeout_establishing)
         
         #wait connected with port_unity
         #loop for the specified port detected (ignore others)
