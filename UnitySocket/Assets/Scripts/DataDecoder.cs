@@ -27,7 +27,7 @@ namespace PythonConnection
         /// return new Dictionary<string, Type>(){
         ///     {"data_type_name", typeof(C#_class_type)}
         /// }
-        public abstract Dictionary<string, Type> DataToType();
+        protected abstract Dictionary<string, Type> DataToType();
 
         //constructor
         public DataDecoder()
