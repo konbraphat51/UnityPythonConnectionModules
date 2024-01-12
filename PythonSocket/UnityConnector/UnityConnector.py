@@ -97,10 +97,13 @@ class UnityConnector:
         # closed successfully
         return True
 
-    def send(self, data: dict) -> bool:
+    def send(self, data_type: str, data: dict) -> bool:
         """
         Send data to Unity
+        
+        This will send "<data_type>!<data json>" to Unity, if encode() not overrided.
 
+        :param str data_type: Type of data
         :param dict data: Data to send
         :return: True if data is sent successfully, False if not connecting
         :rtype: bool
@@ -112,7 +115,7 @@ class UnityConnector:
             return False
 
         # encode data
-        data_encoded = self.encode(data)
+        data_encoded = self.encode(data_type, data)
 
         # send data
         self.socket.send(data_encoded.encode())
@@ -120,7 +123,7 @@ class UnityConnector:
         # sent successfully
         return True
 
-    def encode(self, data: dict) -> str:
+    def encode(self, data_type:str, data: dict) -> str:
         """
         Encode data to send to Unity
 
@@ -132,7 +135,9 @@ class UnityConnector:
         :rtype: str
         """
 
-        return json.dumps(data)
+        data_json = json.dumps(data)
+        
+        return f"{data_type}!{data_json}"
 
     def decode(self, data: str) -> dict:
         """
