@@ -109,19 +109,11 @@ class UnityConnector:
         :rtype: bool
         """
 
-        # if not connecting...
-        if not self.connecting:
-            # ...show this wasn't connecting from the beginning
-            return False
-
         # encode data
         data_encoded = self.encode(data_type, data)
 
         # send data
-        self.socket.send(data_encoded.encode())
-
-        # sent successfully
-        return True
+        return self._send_str(data_encoded)
 
     def encode(self, data_type:str, data: dict) -> str:
         """
@@ -152,6 +144,26 @@ class UnityConnector:
         """
 
         return json.loads(data)
+    
+    def _send_str(self, data_str: str) -> bool:
+        """
+        Send string to Unity
+
+        :param str data: string data to send
+        :return: True if data is sent successfully, False if not connecting
+        :rtype: bool
+        """
+
+        # if not connecting...
+        if not self.connecting:
+            # ...show this wasn't connecting from the beginning
+            return False
+
+        # send data
+        self.socket.send(data_str.encode())
+
+        # sent successfully
+        return True
 
     def _run_connection(self) -> None:
         """
