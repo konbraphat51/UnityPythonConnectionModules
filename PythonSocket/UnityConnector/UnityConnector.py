@@ -96,6 +96,20 @@ class UnityConnector:
         
         return json.dumps(data)
             
+    def decode(self, data:str) -> dict:
+        """
+        Decode data received from Unity
+        
+        The default decoding is to JSON.
+        If you want to change the decoding, override this function.
+        
+        :param str data: Data to decode
+        :return: Decoded data
+        :rtype: dict
+        """
+        
+        return json.loads(data)
+            
     def _run_connection(self):
         """
         Run connection
