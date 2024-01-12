@@ -148,14 +148,17 @@ public class PythonConnector : MonoBehaviour
 
     /// <summary>
     /// Send data to Python server by JSON
+    ///
+    /// This will send "<data_type>!<data json>" to Unity, if Encode() not overrided.
     /// </summary>
     /// <typeparam name="T">Serializable class</typeparam>
+    /// <param name="dataType"> name of the data type. This will be used to decode the data in Python</param>
     /// <param name="data">Serializable class instance. This will be converted to JSON</param>
     /// <returns>if the data was sent successfully. False if not connecting from the beginning</returns>
-    public virtual bool Send<T>(T data)
+    public virtual bool Send<T>(string dataType, T data)
     {
         //to JSON string
-        return Send(Encode(data));
+        return Send(Encode(dataType, data));
     }
 
     /// <summary>
@@ -196,9 +199,9 @@ public class PythonConnector : MonoBehaviour
     /// <typeparam name="T">Serializable class</typeparam>
     /// <param name="data">Serializable class instance</param>
     /// <returns>JSON string</returns>
-    protected virtual string Encode<T>(T data)
+    protected virtual string Encode<T>(string dataType, T data)
     {
-        return JsonUtility.ToJson(data);
+        return dataType + "!" + JsonUtility.ToJson(data);
     }
 
     /// <summary>
