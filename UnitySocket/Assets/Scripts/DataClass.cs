@@ -12,5 +12,5 @@ namespace PythonConnection
     /// Data for receiving data from Python server
     /// </summary>
     [Serializable]
-    abstract class DataClass { }
+    public abstract class DataClass { }
 }

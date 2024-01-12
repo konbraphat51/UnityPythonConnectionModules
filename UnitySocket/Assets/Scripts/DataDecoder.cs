@@ -13,7 +13,7 @@ using UnityEngine.Events;
 
 namespace PythonConnection
 {
-    abstract class DataDecoder : MonoBehaviour
+    public abstract class DataDecoder : MonoBehaviour
     {
         /// <summary>
         /// Dictionary of data type name to actual C# class type reference
