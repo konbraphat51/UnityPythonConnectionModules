@@ -36,7 +36,7 @@ class UnityConnector:
         timeout_establishing: float = 300,
         on_timeout: callable = lambda: None,
         buffer_size: int = 8192,  # 8KB
-        finish_code: str = "!end!",
+        finish_code: str = "end!",
     ) -> None:
         self.address_this = (ip, port_this)
         self.port_unity = port_unity
@@ -50,13 +50,15 @@ class UnityConnector:
 
     def start_listening(
         self, on_data_received: callable, overwriting: bool = False
-    ) -> None:
+    ) -> bool:
         """
         Start listening to Unity
 
         :param callable on_data_received: Function to call when data is received
+            Param data_type(string), data(dict) will be passed to this function
         :param bool overwriting: If True, overwrite the current connection if already connecting
-        :rtype: None
+        :return: True if connection is established successfully, False if timeout
+        :rtype: bool
         """
 
         # if this is already connecting...
@@ -72,14 +74,24 @@ class UnityConnector:
         # remember callback
         self.on_data_received = on_data_received
 
+        # establish connection
+        establish_succeeded = self._wait_connection_established()
+
+        # if connection failed...
+        if not establish_succeeded:
+            # ...failed
+            return False
+
         # start listening thread
         self.thread = threading.Thread(target=self._run_connection)
+        
+        # success
+        return True
 
     def stop_connection(self) -> bool:
         """
         Close connection
 
-        :param bool error_when_not_connecting: If True, raise error when not connecting
         :return: True if connection is closed successfully, False if not connecting from the beginning
         :rtype: bool
         """
@@ -88,6 +100,9 @@ class UnityConnector:
         if not self.connecting:
             # ...show this wasn't connecting from the beginning
             return False
+
+        # send stop code
+        self._send_str(self.finish_code)
 
         # stop connection
         self.socket.close()
@@ -98,30 +113,25 @@ class UnityConnector:
         # closed successfully
         return True
 
-    def send(self, data: dict) -> bool:
+    def send(self, data_type: str, data: dict) -> bool:
         """
         Send data to Unity
+        
+        This will send "<data_type>!<data json>" to Unity, if encode() not overrided.
 
+        :param str data_type: Type of data
         :param dict data: Data to send
         :return: True if data is sent successfully, False if not connecting
         :rtype: bool
         """
 
-        # if not connecting...
-        if not self.connecting:
-            # ...show this wasn't connecting from the beginning
-            return False
-
         # encode data
-        data_encoded = self.encode(data)
+        data_encoded = self.encode(data_type, data)
 
         # send data
-        self.socket.send(data_encoded.encode())
+        return self._send_str(data_encoded)
 
-        # sent successfully
-        return True
-
-    def encode(self, data: dict) -> str:
+    def encode(self, data_type:str, data: dict) -> str:
         """
         Encode data to send to Unity
 
@@ -133,21 +143,47 @@ class UnityConnector:
         :rtype: str
         """
 
-        return json.dumps(data)
+        data_json = json.dumps(data)
+        
+        return f"{data_type}!{data_json}"
 
-    def decode(self, data: str) -> dict:
+    def decode(self, data: str) -> tuple[str, dict]:
         """
         Decode data received from Unity
 
-        The default decoding is to JSON.
+        The default decoding is to data_type + JSON.
         If you want to change the decoding, override this function.
 
         :param str data: Data to decode
-        :return: Decoded data
-        :rtype: dict
+        :return: (data_type, data)
+        :rtype: tuple[str, dict]
+        """
+        
+        data_type, json_raw = data.split("!", 1)
+        
+        json_data = json.loads(json_raw)
+
+        return (data_type, json_data)
+    
+    def _send_str(self, data_str: str) -> bool:
+        """
+        Send string to Unity
+
+        :param str data: string data to send
+        :return: True if data is sent successfully, False if not connecting
+        :rtype: bool
         """
 
-        return json.loads(data)
+        # if not connecting...
+        if not self.connecting:
+            # ...show this wasn't connecting from the beginning
+            return False
+
+        # send data
+        self.socket.send(data_str.encode())
+
+        # sent successfully
+        return True
 
     def _run_connection(self) -> None:
         """
@@ -155,14 +191,6 @@ class UnityConnector:
 
         This function is called when the connection is established
         """
-
-        # establish
-        establish_succeeded = self._wait_connection_established()
-
-        # if connection failed...
-        if not establish_succeeded:
-            # ...quit
-            return
 
         # loop for receiving data
         while True:
@@ -250,7 +278,7 @@ class UnityConnector:
         """
 
         # decode data
-        data = self.decode(data)
+        data_type, data = self.decode(data)
 
         # report
-        self.on_data_received(data)
+        self.on_data_received(data_type, data)
