@@ -77,6 +77,9 @@ namespace PythonConnection
         [SerializeField]
         private UnityEvent onTimeOut = new UnityEvent();
 
+        [Tooltip("Event called when stopped connection by Python server")]
+        private UnityEvent onStopped = new UnityEvent();
+
         [Tooltip("If get this string, will finish connection")]
         [SerializeField]
         private string finishString = "end!";
@@ -223,6 +226,24 @@ namespace PythonConnection
         }
 
         /// <summary>
+        /// Add callback when stopped by Python server
+        /// </summary>
+        /// <param name="callback">this will be called when stopped by Python server</param>
+        public void RegisterStoppedAction(UnityAction callback)
+        {
+            onStopped.AddListener(callback);
+        }
+
+        /// <summary>
+        /// Remove callback when stopped by Python server
+        /// </summary>
+        /// <param name="callback">this will be called when stopped by Python server</param>
+        public void RemoveStoppedAction(UnityAction callback)
+        {
+            onStopped.RemoveListener(callback);
+        }
+
+        /// <summary>
         /// Called when received data from Python server.
         ///
         /// This will decode the data and call the registered callback
@@ -281,6 +302,9 @@ namespace PythonConnection
                     {
                         //stop connection
                         StopConnection();
+
+                        //action when stopped by Python server
+                        onStopped.Invoke();
 
                         //stop listening
                         break;
