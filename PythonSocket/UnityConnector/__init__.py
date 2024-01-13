@@ -1,3 +1,3 @@
-from UnityConnector import UnityConnector
+from UnityConnector.UnityConnector import UnityConnector
 
 __all__ = ["UnityConnector"]
