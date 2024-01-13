@@ -14,6 +14,8 @@ connector = UnityConnector(
 def on_data_received(data_type, data):
     print(data_type, data)
 
+print("connecting...")
+
 connector.start_listening(
     on_data_received
 )
