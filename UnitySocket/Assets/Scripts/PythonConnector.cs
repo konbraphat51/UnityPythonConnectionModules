@@ -205,6 +205,24 @@ namespace PythonConnection
         }
 
         /// <summary>
+        /// Add callback when timeout
+        /// </summary>
+        /// <param name="callback">this will be called when timeout</param>
+        public void RegisterTimeoutAction(UnityAction callback)
+        {
+            onTimeOut.AddListener(callback);
+        }
+
+        /// <summary>
+        /// Remove callback when timeout
+        /// </summary>
+        /// <param name="callback">this will be called when timeout</param>
+        public void RemoveTimeoutAction(UnityAction callback)
+        {
+            onTimeOut.RemoveListener(callback);
+        }
+
+        /// <summary>
         /// Called when received data from Python server.
         ///
         /// This will decode the data and call the registered callback
