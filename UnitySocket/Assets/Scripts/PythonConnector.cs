@@ -78,6 +78,7 @@ namespace PythonConnection
         private UnityEvent onTimeOut = new UnityEvent();
 
         [Tooltip("Event called when stopped connection by Python server")]
+        [SerializeField]
         private UnityEvent onStopped = new UnityEvent();
 
         [Tooltip("If get this string, will finish connection")]
