@@ -4,6 +4,7 @@ Writer: Konbraphat51
 License: Boost Software License (BSL1.0)
 """
 
+from __future__ import annotations
 from socket import AF_INET, SOCK_STREAM, timeout
 from socket import socket as Socket
 import threading
