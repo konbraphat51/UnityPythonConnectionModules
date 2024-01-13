@@ -185,6 +185,26 @@ namespace PythonConnection
         }
 
         /// <summary>
+        /// Add callback when received data from Python server
+        /// </summary>
+        /// <param name="dataType">type of dataclass</param>
+        /// <param name="callback">callback called</param>
+        public void RegisterAction(Type dataType, UnityAction<DataClass> callback)
+        {
+            GetComponent<DataDecoder>().RegisterAction(dataType, callback);
+        }
+
+        /// <summary>
+        /// Remove callback when received data from Python server
+        /// </summary>
+        /// <param name="dataType">type of dataclass</param>
+        /// <param name="callback">callback called</param>
+        public void RemoveAction(Type dataType, UnityAction<DataClass> callback)
+        {
+            GetComponent<DataDecoder>().RemoveAction(dataType, callback);
+        }
+
+        /// <summary>
         /// Called when received data from Python server.
         ///
         /// This will decode the data and call the registered callback
