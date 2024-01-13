@@ -10,4 +10,9 @@ public class TestDataClass : DataClass
 
     [SerializeField]
     private List<float> testValue1;
+
+    public List<float> v1
+    {
+        get { return testValue1; }
+    }
 }
