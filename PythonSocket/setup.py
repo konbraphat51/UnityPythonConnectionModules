@@ -12,8 +12,6 @@ from pathlib import Path
 # get README.md
 readme = (Path(__file__).parent / "README.md").read_text(encoding="utf-8")
 
-
-
 setup(
     name="UnityConnector",
     version="0.0.1",
