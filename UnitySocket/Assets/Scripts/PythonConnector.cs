@@ -96,14 +96,17 @@ namespace PythonConnection
         {
             try
             {
-                //try connecting
-                client = new TcpClient(ipAddress, portThis);
+                //prepare TCP client
+                client = new TcpClient(ipAddress, portThis)
+                {
+                    //set timeout
+                    // to miliseconds
+                    ReceiveTimeout = (int)(timeOutReceiving * 1000f)
+                };
+
+                //try connecting to Python
                 client.Connect(ipAddress, portPython);
                 stream = client.GetStream();
-
-                //set timeout
-                // to miliseconds
-                client.ReceiveTimeout = (int)(timeOutReceiving * 1000f);
 
                 //start listening thread
                 Task.Factory.StartNew(OnProcessListening);
