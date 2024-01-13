@@ -87,7 +87,7 @@ class UnityConnector:
 
         # start listening thread
         self.thread = threading.Thread(target=self._run_connection)
-        
+
         # success
         return True
 
@@ -119,7 +119,7 @@ class UnityConnector:
     def send(self, data_type: str, data: dict) -> bool:
         """
         Send data to Unity
-        
+
         This will send "<data_type>!<data json>" to Unity, if encode() not overrided.
 
         :param str data_type: Type of data
@@ -134,7 +134,7 @@ class UnityConnector:
         # send data
         return self._send_str(data_encoded)
 
-    def encode(self, data_type:str, data: dict) -> str:
+    def encode(self, data_type: str, data: dict) -> str:
         """
         Encode data to send to Unity
 
@@ -147,7 +147,7 @@ class UnityConnector:
         """
 
         data_json = json.dumps(data)
-        
+
         return f"{data_type}!{data_json}"
 
     def decode(self, data: str) -> tuple[str, dict]:
@@ -161,13 +161,13 @@ class UnityConnector:
         :return: (data_type, data)
         :rtype: tuple[str, dict]
         """
-        
+
         data_type, json_raw = data.split("!", 1)
-        
+
         json_data = json.loads(json_raw)
 
         return (data_type, json_data)
-    
+
     def _send_str(self, data_str: str) -> bool:
         """
         Send string to Unity
@@ -208,10 +208,10 @@ class UnityConnector:
                 if data == self.finish_code:
                     # ...stop connection
                     self.stop_connection()
-                    
+
                     # call stopped callback
                     self.on_stopped()
-                    
+
                     break
 
                 # do something with data
