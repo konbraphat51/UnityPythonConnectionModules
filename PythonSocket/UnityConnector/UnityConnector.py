@@ -23,6 +23,7 @@ class UnityConnector:
     :param float timeout_receiving: How many seconds to wait for receive next data from Unity
     :param float timeout_establishing: How many seconds to wait for establish connection with Unity
     :param callable on_timeout: Function to call when timeout
+    :param callable on_stopped: Function to call when connection is stopped by Unity
     :param int buffer_size: Buffer size for receiving data
     :param str finish_code: Code to finish connection
     """
@@ -35,6 +36,7 @@ class UnityConnector:
         timeout_receiving: float = 120,
         timeout_establishing: float = 300,
         on_timeout: callable = lambda: None,
+        on_stopped: callable = lambda: None,
         buffer_size: int = 8192,  # 8KB
         finish_code: str = "end!",
     ) -> None:
@@ -43,6 +45,7 @@ class UnityConnector:
         self.timeout_receiving = timeout_receiving
         self.timeout_establishing = timeout_establishing
         self.on_timeout = on_timeout
+        self.on_stopped = on_stopped
         self.buffer_size = buffer_size
         self.finish_code = finish_code
         self.connecting = False
@@ -205,6 +208,10 @@ class UnityConnector:
                 if data == self.finish_code:
                     # ...stop connection
                     self.stop_connection()
+                    
+                    # call stopped callback
+                    self.on_stopped()
+                    
                     break
 
                 # do something with data
