@@ -25,7 +25,7 @@ setup(
     url="https://github.com/konbraphat51/UnityPythonConnectionClass",
     packages=find_packages(exclude=["tests", "Docs"]),
     test_suite="tests",
-    python_requires=">=3.8",
+    python_requires=">=3.7",
     include_package_data=True,
     install_requires=[
     ],
