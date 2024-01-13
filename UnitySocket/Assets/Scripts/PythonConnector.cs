@@ -115,8 +115,10 @@ namespace PythonConnection
                 connecting = true;
                 return true;
             }
-            catch (SocketException)
+            catch (SocketException e)
             {
+                Debug.LogError(e);
+
                 //connection failed
                 connecting = false;
 
