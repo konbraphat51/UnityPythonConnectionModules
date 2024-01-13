@@ -1,2 +1,2 @@
 UnityConnector.egg-info/**
-**/pycache/**
+**/__pycache__/**
