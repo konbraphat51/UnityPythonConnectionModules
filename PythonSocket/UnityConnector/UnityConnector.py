@@ -4,7 +4,8 @@ Writer: Konbraphat51
 License: Boost Software License (BSL1.0)
 """
 
-from socket import create_server, socket
+from socket import AF_INET, SOCK_STREAM, timeout
+from socket import socket as Socket
 import threading
 import json
 
@@ -218,7 +219,7 @@ class UnityConnector:
                 self._report_received_data(data)
 
             # if timeout...
-            except socket.timeout:
+            except timeout:
                 # ...quit connection
 
                 # call timeout callback
@@ -239,7 +240,9 @@ class UnityConnector:
         """
 
         # make server
-        self.server = create_server(self.address_this)
+        self.server = Socket(AF_INET, SOCK_STREAM)
+        self.server.bind(self.address_this)
+        self.server.listen()
 
         # set timeout for establishing
         self.server.settimeout(self.timeout_establishing)
@@ -267,7 +270,7 @@ class UnityConnector:
                     socket.close()
 
         # if timeout...
-        except socket.timeout:
+        except timeout:
             # ...quit connection
 
             # call timeout callback
