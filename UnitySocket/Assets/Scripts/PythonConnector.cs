@@ -59,11 +59,11 @@ namespace PythonConnection
 
         [Tooltip("Port of Python Server")]
         [SerializeField]
-        private int portPython = 8001;
+        private int portPython = 50001;
 
         [Tooltip("Port of Unity Server")]
         [SerializeField]
-        private int portThis = 8002;
+        private int portThis = 50002;
 
         [Tooltip("Buffer size for reading data from Python server. Bytes.")]
         [SerializeField]

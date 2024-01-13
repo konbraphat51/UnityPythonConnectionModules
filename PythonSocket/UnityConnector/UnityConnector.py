@@ -32,8 +32,8 @@ class UnityConnector:
 
     def __init__(
         self,
-        port_this: int = 8001,
-        port_unity: int = 8002,
+        port_this: int = 50001,
+        port_unity: int = 50002,
         ip: str = "127.0.0.1",
         timeout_receiving: float = 120,
         timeout_establishing: float = 300,
