@@ -119,7 +119,7 @@ namespace PythonConnection
             }
             catch (SocketException e)
             {
-                Debug.LogError(e);
+                Debug.Log(e);
 
                 //connection failed
                 connecting = false;
@@ -300,6 +300,8 @@ namespace PythonConnection
             {
                 while (true)
                 {
+                    Debug.Log("a");
+
                     //read data from Python server
                     byte[] data = new byte[bufferSize];
                     int bytes = stream.Read(data, 0, data.Length);
