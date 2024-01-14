@@ -289,7 +289,7 @@ namespace PythonConnection
         /// <returns>JSON string</returns>
         protected virtual string Encode<T>(string dataType, T data)
         {
-            return dataType + "!" + JsonUtility.ToJson(data);
+            return "<s>" + dataType + "!" + JsonUtility.ToJson(data) + "<e>";
         }
 
         /// <summary>
