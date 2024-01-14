@@ -72,10 +72,6 @@ namespace PythonConnection
         [SerializeField]
         private int bufferSize = 8192;
 
-        [Tooltip("Timeout for receiving data from Python server. Seconds.")]
-        [SerializeField]
-        private float timeOutReceiving = 10f;
-
         [Tooltip("Event called when timeout")]
         [SerializeField]
         private UnityEvent onTimeOut = new UnityEvent();
