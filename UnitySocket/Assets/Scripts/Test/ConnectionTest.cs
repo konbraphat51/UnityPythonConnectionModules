@@ -60,7 +60,10 @@ public class ConnectionTest : MonoBehaviour
         TestDataClass testData = data as TestDataClass;
 
         Debug.Log("testValue0: " + testData.testValue0);
-        Debug.Log("testValue1: " + testData.v1);
+        foreach (float v in testData.v1)
+        {
+            Debug.Log("testValue1: " + v);
+        }
 
         int v1 = UnityEngine.Random.Range(0, 100);
         List<float> v2 = new List<float>()

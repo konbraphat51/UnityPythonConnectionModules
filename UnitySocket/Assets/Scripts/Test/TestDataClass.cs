@@ -9,9 +9,9 @@ public class TestDataClass : DataClass
     public int testValue0;
 
     [SerializeField]
-    private List<float> testValue1;
+    private List<double> testValue1;
 
-    public List<float> v1
+    public List<double> v1
     {
         get { return testValue1; }
     }
