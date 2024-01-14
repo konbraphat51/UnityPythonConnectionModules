@@ -24,6 +24,8 @@ public class ConnectionTest : MonoBehaviour
 
     void Start()
     {
+        PythonConnector.instance.RegisterAction(typeof(TestDataClass), OnDataReceived);
+
         if (PythonConnector.instance.StartConnection())
         {
             Debug.Log("Connected");
