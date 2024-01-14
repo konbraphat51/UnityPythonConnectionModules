@@ -97,7 +97,7 @@ namespace PythonConnection
             try
             {
                 //prepare TCP client
-                client = new TcpClient(ipAddress, portThis)
+                client = new TcpClient(ipAddress, portPython)
                 {
                     //set timeout
                     // to miliseconds
@@ -105,7 +105,6 @@ namespace PythonConnection
                 };
 
                 //try connecting to Python
-                client.Connect(ipAddress, portPython);
                 stream = client.GetStream();
 
                 //start listening thread
