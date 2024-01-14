@@ -335,6 +335,11 @@ namespace PythonConnection
                 //action when timeout
                 onTimeOut.Invoke();
             }
+            catch (Exception e)
+            {
+                //log the error because this is in seperated thread
+                Debug.LogError(e);
+            }
         }
     }
 }
