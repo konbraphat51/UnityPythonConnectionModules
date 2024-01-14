@@ -155,7 +155,7 @@ class UnityConnector:
         
         return "<s>" + inside + "<e>"
 
-    def decode(self, data: str) -> tuple[str, dict]:
+    def decode(self, data: str) -> list[tuple[str, dict]]:
         """
         Decode data received from Unity
 
@@ -163,15 +163,39 @@ class UnityConnector:
         If you want to change the decoding, override this function.
 
         :param str data: Data to decode
-        :return: (data_type, data)
-        :rtype: tuple[str, dict]
+        :return: list of (data_type, data)
+        :rtype: list[tuple[str, dict]]
         """
 
-        data_type, json_raw = data.split("!", 1)
+        # divide by start / end code
+        contents = []
+        while True:
+            start = data.find("<s>")
+            end = data.find("<e>")
+            
+            if start == -1 or end == -1:
+                break
+            
+            contents.append(data[start+3:end])
+            
+            # got to the end
+            if end == len(data)-3:
+                break
+            else:
+                # for next iteration
+                data = data[end+3:]
 
-        json_data = json.loads(json_raw)
+        # decode each content
+        messages = []
+        for content in contents:
+            # seperate data_type and json
+            data_type, json_raw = content.split("!", 1)
 
-        return (data_type, json_data)
+            json_data = json.loads(json_raw)
+            
+            messages.append((data_type, json_data))
+
+        return messages
 
     def _send_str(self, data_str: str) -> bool:
         """
@@ -308,7 +332,8 @@ class UnityConnector:
         """
 
         # decode data
-        data_type, data = self.decode(data)
+        messages = self.decode(data)
 
         # report
-        self.on_data_received(data_type, data)
+        for data_type, data in messages:
+            self.on_data_received(data_type, data)
