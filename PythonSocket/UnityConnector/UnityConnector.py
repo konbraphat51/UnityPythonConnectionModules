@@ -167,23 +167,25 @@ class UnityConnector:
         :rtype: list[tuple[str, dict]]
         """
 
-        # divide by start / end code
+        # divide by start / end tag
+        START_TAG = "<s>"
+        END_TAG = "<e>"
         contents = []
         while True:
-            start = data.find("<s>")
-            end = data.find("<e>")
+            start = data.find(START_TAG)
+            end = data.find(END_TAG)
             
             if start == -1 or end == -1:
                 break
             
-            contents.append(data[start+3:end])
+            contents.append(data[start+len(START_TAG):end])
             
             # got to the end
-            if end == len(data)-3:
+            if end == len(data)-len(END_TAG):
                 break
             else:
                 # for next iteration
-                data = data[end+3:]
+                data = data[end+len(END_TAG):]
 
         # decode each content
         messages = []
