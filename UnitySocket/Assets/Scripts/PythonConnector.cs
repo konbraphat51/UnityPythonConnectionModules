@@ -7,6 +7,7 @@ License: Boost Software License (BSL1.0)
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -97,7 +98,8 @@ namespace PythonConnection
             try
             {
                 //prepare TCP client
-                client = new TcpClient(ipAddress, portPython)
+                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ipAddress), portThis);
+                client = new TcpClient(endPoint)
                 {
                     //set timeout
                     // to miliseconds
@@ -105,6 +107,7 @@ namespace PythonConnection
                 };
 
                 //try connecting to Python
+                client.Connect(IPAddress.Parse(ipAddress), portPython);
                 stream = client.GetStream();
 
                 //start listening thread

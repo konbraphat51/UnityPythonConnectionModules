@@ -24,7 +24,14 @@ public class ConnectionTest : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(PythonConnector.instance.StartConnection());
+        if (PythonConnector.instance.StartConnection())
+        {
+            Debug.Log("Connected");
+        }
+        else
+        {
+            Debug.Log("Connection Failed");
+        }
     }
 
     void Update()
