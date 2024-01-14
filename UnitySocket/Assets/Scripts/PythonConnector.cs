@@ -111,6 +111,10 @@ namespace PythonConnection
                 client.Connect(IPAddress.Parse(ipAddress), portPython);
                 stream = client.GetStream();
 
+                //set timeout
+                // to miliseconds
+                stream.ReadTimeout = (int)(timeOutReceiving * 1000f);
+
                 //start listening thread
                 Task.Factory.StartNew(OnProcessListening);
 
