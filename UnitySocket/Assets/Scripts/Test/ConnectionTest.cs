@@ -68,6 +68,8 @@ public class ConnectionTest : MonoBehaviour
         };
         SendingData sendingData = new SendingData(v1, v2);
 
+        Debug.Log("Sending Data: " + v1 + ", " + v2[0] + ", " + v2[1]);
+
         PythonConnector.instance.Send("test", sendingData);
     }
 }
