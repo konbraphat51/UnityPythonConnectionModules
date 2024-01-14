@@ -151,7 +151,9 @@ class UnityConnector:
 
         data_json = json.dumps(data)
 
-        return f"{data_type}!{data_json}"
+        inside = f"{data_type}!{data_json}"
+        
+        return "<s>" + inside + "<e>"
 
     def decode(self, data: str) -> tuple[str, dict]:
         """
