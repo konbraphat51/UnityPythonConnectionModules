@@ -7,6 +7,7 @@ License: Boost Software License (BSL1.0)
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -354,10 +355,19 @@ namespace PythonConnection
             {
                 if (stream.DataAvailable)
                 {
-                    //read data from Python server
+                    //read all data from Python server
                     byte[] data = new byte[bufferSize];
-                    int bytes = stream.Read(data);
-                    string message = Encoding.UTF8.GetString(data, 0, bytes);
+                    string message = "";
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        while (stream.DataAvailable)
+                        {
+                            int readBytes = stream.Read(data, 0, data.Length);
+                            ms.Write(data, 0, readBytes);
+                        }
+
+                        message = Encoding.UTF8.GetString(ms.ToArray());
+                    }
 
                     //handle stop code
                     if (message == finishString)
