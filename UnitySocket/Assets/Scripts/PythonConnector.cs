@@ -186,7 +186,7 @@ namespace PythonConnection
             }
 
             //encode data
-            byte[] bytes = System.Text.Encoding.ASCII.GetBytes(data);
+            byte[] bytes = Encoding.UTF8.GetBytes(data);
 
             //send data
             stream.Write(bytes, 0, bytes.Length);
@@ -304,8 +304,8 @@ namespace PythonConnection
 
                     //read data from Python server
                     byte[] data = new byte[bufferSize];
-                    int bytes = stream.Read(data, 0, data.Length);
-                    string message = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    int bytes = stream.Read(data);
+                    string message = Encoding.UTF8.GetString(data, 0, bytes);
 
                     //handle stop code
                     if (message == finishString)
