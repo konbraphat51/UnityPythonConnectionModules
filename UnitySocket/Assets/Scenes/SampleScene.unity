@@ -154,8 +154,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ipAddress: 127.0.0.1
-  portPython: 9000
-  portThis: 9001
+  portPython: 50001
+  portThis: 50002
   bufferSize: 8192
   timeOutReceiving: 10
   onTimeOut:
