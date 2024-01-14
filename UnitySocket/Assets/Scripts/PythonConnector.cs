@@ -253,6 +253,15 @@ namespace PythonConnection
         }
 
         /// <summary>
+        /// Data received from Python server
+        /// </summary>
+        protected struct Message
+        {
+            public string dataType;
+            public string dataJson;
+        }
+
+        /// <summary>
         /// Called when received data from Python server.
         ///
         /// This will decode the data and call the registered callback
@@ -261,11 +270,14 @@ namespace PythonConnection
         protected virtual void OnDataReceived(string data)
         {
             //separate data_type and data JSON
-            Separate(data, out string dataType, out string dataJson);
+            Message[] messages = Separate(data);
 
-            //to Decoder
-            GetComponent<DataDecoder>()
-                .DecodeAndReport(dataType, dataJson);
+            foreach (Message message in messages)
+            {
+                //to Decoder
+                GetComponent<DataDecoder>()
+                    .DecodeAndReport(message.dataType, message.dataJson);
+            }
         }
 
         /// <summary>
@@ -282,12 +294,55 @@ namespace PythonConnection
         /// <summary>
         /// Decode received data to Serializable class
         /// </summary>
-        protected virtual void Separate(string data, out string dataType, out string dataJson)
+        protected virtual Message[] Separate(string data)
         {
-            //devide to data_type and data JSON
-            string[] splited = data.Split('!', 2);
-            dataType = splited[0];
-            dataJson = splited[1];
+            //seperate by start/end tag
+            List<string> contents = new List<string>();
+            const string startTag = "<start>";
+            const string endTag = "<end>";
+            while (true)
+            {
+                int startIndex = data.IndexOf(startTag);
+                int endIndex = data.IndexOf(endTag);
+
+                if (startIndex == -1 || endIndex == -1)
+                {
+                    break;
+                }
+
+                //seperate data_type and data JSON
+                int length = endIndex - startIndex - startTag.Length;
+                string content = data.Substring(startIndex + startTag.Length, length);
+                contents.Add(content);
+
+                // if got to the end...
+                if (endIndex == data.Length - endTag.Length)
+                {
+                    //...stop
+                    break;
+                }
+                else
+                {
+                    //... to the next iteration
+                    data = data.Substring(endIndex + endTag.Length);
+                }
+            }
+
+            //decode each content
+            Message[] messages = new Message[contents.Count];
+            for (int cnt = 0; cnt < contents.Count; cnt++)
+            {
+                Message message = new Message();
+
+                //devide to data_type and data JSON
+                string[] splited = contents[cnt].Split('!', 2);
+                message.dataType = splited[0];
+                message.dataJson = splited[1];
+
+                messages[cnt] = message;
+            }
+
+            return messages;
         }
 
         /// <summary>
