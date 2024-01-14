@@ -275,6 +275,10 @@ class UnityConnector:
                 # ...stop connection
                 self.stop_connection()
                 break
+            
+            # connection quitted
+            except ConnectionAbortedError:
+                break
 
     def _wait_connection_established(self) -> bool:
         """
