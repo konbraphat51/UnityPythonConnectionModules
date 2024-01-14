@@ -305,8 +305,6 @@ namespace PythonConnection
             {
                 while (true)
                 {
-                    Debug.Log("a");
-
                     //read data from Python server
                     byte[] data = new byte[bufferSize];
                     int bytes = stream.Read(data);
