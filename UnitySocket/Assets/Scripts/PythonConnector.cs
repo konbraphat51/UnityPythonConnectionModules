@@ -298,8 +298,8 @@ namespace PythonConnection
         {
             //seperate by start/end tag
             List<string> contents = new List<string>();
-            const string startTag = "<start>";
-            const string endTag = "<end>";
+            const string startTag = "<s>";
+            const string endTag = "<e>";
             while (true)
             {
                 int startIndex = data.IndexOf(startTag);
