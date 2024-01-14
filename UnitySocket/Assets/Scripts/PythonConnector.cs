@@ -90,6 +90,14 @@ namespace PythonConnection
         private TcpClient client;
         private NetworkStream stream;
 
+        protected virtual void Update()
+        {
+            if (connecting)
+            {
+                ReceiveData();
+            }
+        }
+
         /// <summary>
         /// Connect to the Python server
         /// </summary>
@@ -100,23 +108,11 @@ namespace PythonConnection
             {
                 //prepare TCP client
                 IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ipAddress), portThis);
-                client = new TcpClient(endPoint)
-                {
-                    //set timeout
-                    // to miliseconds
-                    ReceiveTimeout = (int)(timeOutReceiving * 1000f)
-                };
+                client = new TcpClient(endPoint);
 
                 //try connecting to Python
                 client.Connect(IPAddress.Parse(ipAddress), portPython);
                 stream = client.GetStream();
-
-                //set timeout
-                // to miliseconds
-                stream.ReadTimeout = (int)(timeOutReceiving * 1000f);
-
-                //start listening thread
-                Task.Factory.StartNew(OnProcessListening);
 
                 //connection succeeded
                 connecting = true;
@@ -296,14 +292,12 @@ namespace PythonConnection
 
         /// <summary>
         /// Keep listening to the Python server
-        ///
-        /// this will be running in a separate thread0
         /// </summary>
-        private void OnProcessListening()
+        private void ReceiveData()
         {
             try
             {
-                while (true)
+                if (stream.DataAvailable)
                 {
                     //read data from Python server
                     byte[] data = new byte[bufferSize];
@@ -320,7 +314,7 @@ namespace PythonConnection
                         onStopped.Invoke();
 
                         //stop listening
-                        break;
+                        return;
                     }
 
                     //call registered callback
@@ -334,11 +328,6 @@ namespace PythonConnection
 
                 //action when timeout
                 onTimeOut.Invoke();
-            }
-            catch (Exception e)
-            {
-                //log the error because this is in seperated thread
-                Debug.LogError(e);
             }
         }
     }
