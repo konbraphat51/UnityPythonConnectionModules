@@ -205,7 +205,23 @@ class UnityConnector:
                 self.socket.settimeout(self.timeout_receiving)
 
                 # receive data
-                data = self.socket.recv(self.buffer_size).decode()
+                self.socket.setblocking(True)   # block until data received
+                data_byte = bytes()
+                while True:
+                    data_this = self.socket.recv(self.buffer_size)
+                    data_byte += data_this
+                    
+                    # if there could be more data...
+                    if len(data_this) == self.buffer_size:
+                        # ...try get more
+                        self.socket.setblocking(False)  # immediately
+                        continue
+                    # if there is no more data...
+                    else:
+                        break
+                    
+                # decode data
+                data = data_byte.decode()
 
                 # if finish code received...
                 if data == self.finish_code:
