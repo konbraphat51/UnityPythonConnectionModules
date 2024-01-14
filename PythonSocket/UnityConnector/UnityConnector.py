@@ -89,6 +89,7 @@ class UnityConnector:
 
         # start listening thread
         self.thread = threading.Thread(target=self._run_connection)
+        self.thread.start()
 
         # success
         return True
