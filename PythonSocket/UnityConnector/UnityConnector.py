@@ -180,11 +180,12 @@ class UnityConnector:
             
             contents.append(data[start+len(START_TAG):end])
             
-            # got to the end
+            # if got to the end...
             if end == len(data)-len(END_TAG):
+                # ...stop
                 break
             else:
-                # for next iteration
+                # ...to the next iteration
                 data = data[end+len(END_TAG):]
 
         # decode each content
