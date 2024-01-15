@@ -40,15 +40,15 @@ Use `UnityConnector`
 from UnityConnector import UnityConnector
 ```
 
-- `UnityConnector.start_listening()`  
+- `UnityConnector.start_listening()`   
   Ignite the `Python` server.  
   This will block until `Unity` is connected
   **When data is received,** the callback will be invoked.
 
-- `UnityConnector.send(string, dict)`
+- `UnityConnector.send(string, dict)`  
   Send JSON data to `Unity`
 
-- `UnityConnector.stop_connection()`
+- `UnityConnector.stop_connection()`  
   Stop the connection and send **quit code** to `Unity`
 
 #### Making callbacks
@@ -72,6 +72,7 @@ Put
 
 to your `Unity` project.
 
+
 Make
 - Subclasses of `DataClass` for each of your data formats. [[Example]](https://github.com/konbraphat51/UnityPythonConnectionModules/blob/main/UnitySocket/Assets/Scripts/Test/TestDataClass.cs)
 - A subclass of `DataDecoder` and **just override** `DataToType()` [[Example]](https://github.com/konbraphat51/UnityPythonConnectionModules/blob/main/UnitySocket/Assets/Scripts/Test/TestDecoder.cs)
@@ -85,14 +86,17 @@ to an `UnityObject` (anything OK, even a empty class)
 #### Brief Description
 You can observe [`ConnectionTest.cs`](https://github.com/konbraphat51/UnityPythonConnectionModules/blob/main/UnitySocket/Assets/Scripts/Test/ConnectionTest.cs)
 
-- `PythonConnector.instance.RegisterAction(type, function)`
+- `PythonConnector.instance.RegisterAction(type, function)`  
   Register callback corresponds to the `type`
   `type` is `DataClass`
 
-- `PythonConnector.instance.StartConnection()`
+- `PythonConnector.instance.StartConnection()`  
   Starting connection with `Python`
   Call this **after** `Python` started.
 
 - `PythonConnector.instance.Send(string, DataClass)`  
   Send data to `Python`
   Give data format name and dataclass (automatically converted into JSON if you use `Serialize`)
+
+- `PythonConnector.instance.StopConnection()`  
+  Send quit code to `Python` and stop connection.
