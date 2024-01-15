@@ -7,7 +7,7 @@ Use
 - `UnitySocket` for your `Unity` project.
 
 ### Data format
-these 2 will send the data with the format below:
+these 2 will send to the data to each other with the format below:
 ```
 <s>{json_format_name}!{json}<e>
 ```
@@ -19,6 +19,9 @@ these 2 will send the data with the format below:
 The format decoding will get error.
 
 ## Python Socket
+### Instalation
 ```
 pip install "git+https://github.com/konbraphat51/UnityPythonConnectionModules.git#egg=UnityConnector&subdirectory=PythonSocket"
 ```
+
+### How to code
