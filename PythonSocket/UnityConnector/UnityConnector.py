@@ -1,5 +1,5 @@
 """
-UnityPythonConnectionClass
+UnityPythonConnectionModules
 Writer: Konbraphat51
 License: Boost Software License (BSL1.0)
 """
