@@ -1,5 +1,5 @@
 /*
-https://github.com/konbraphat51/UnityPythonConnectionClass
+https://github.com/konbraphat51/UnityPythonConnectionModules
 Author: Konbraphat51
 License: Boost Software License (BSL1.0)
 */
