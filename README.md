@@ -1,5 +1,4 @@
-# Unity-Python Connection Modules
-[**Go to the repository page**](https://github.com/konbraphat51/UnityPythonConnectionModules)
+# [Unity-Python Connection Modules](https://github.com/konbraphat51/UnityPythonConnectionModules)
 
 These are encapsulated `Python` and `Unity` modules for continuous TCP communication between these.
 
