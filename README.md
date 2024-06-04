@@ -2,6 +2,8 @@
 
 These are encapsulated `Python` and `Unity` modules for continuous TCP communication between these.
 
+For Japanese: [【Python, Unity】（ほぼ）コピペでUnity・Pythonの双方向通信を簡単に記述する](https://qiita.com/konbraphat51/items/f9d1a36218ee127a7118)
+
 ## Entire Description
 Use 
 - `PythonSocket` for your `Python` project,
